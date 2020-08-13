@@ -1,10 +1,15 @@
-# Planner REST API
+# TO-DO REST API
 
-**In progress**
+**Almost completed**
+
+## npm install
+## npm run migrate-up
+## npm run dev
 
 ## Technologies:
 - NodeJS
 - Express
 - Sequelize
 - Typescript
+- Sqlite
 - Postgresql
