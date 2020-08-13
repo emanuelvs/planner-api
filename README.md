@@ -2,9 +2,9 @@
 
 **Almost completed**
 
-## npm install
-## npm run migrate-up
-## npm run dev
+> npm install
+> npm run migrate-up
+> npm run dev
 
 ## Technologies:
 - NodeJS
