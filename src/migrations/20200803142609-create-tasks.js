@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('task', {
+    await queryInterface.createTable('tasks', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,7 +12,7 @@ module.exports = {
           type: Sequelize.UUID,
           allowNull: false,
           references: {
-            model: 'user',
+            model: 'users',
             key: 'id'
           }
       },
@@ -24,19 +24,11 @@ module.exports = {
           type: Sequelize.TEXT,
           allowNull: false
       },
-      notify: {
-          type: Sequelize.BOOLEAN,
-          allowNull: true
-      },
-      left_time: {
-          type: Sequelize.DATE,
-          allowNull: true
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

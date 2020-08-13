@@ -1,14 +1,13 @@
 import {Model, DataTypes} from 'sequelize'
-import sequelize from './index'
-import UserModel from './user'
+import sequelize from '../config/index'
 
 export interface TaskI {
-    id?: DataTypes.DataTypeAbstract
-    author_id?: DataTypes.DataTypeAbstract
+    id?: DataTypes.DataTypeAbstract | string
+    author_id?: DataTypes.DataTypeAbstract | string
     title: string
     description: string
-    notify: boolean
-    left_time?: Date
+    createdAt: Date
+    updatedAt: Date
 }
 
 class TaskModel extends Model<TaskI> implements TaskI {
@@ -16,9 +15,8 @@ class TaskModel extends Model<TaskI> implements TaskI {
     public author_id?: DataTypes.AbstractDataTypeConstructor
     public title!: string
     public description!: string
-    public notify!: boolean
-    public left_time?: Date
     public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
 }
 TaskModel.init({
     id: {
@@ -38,20 +36,18 @@ TaskModel.init({
         type: DataTypes.TEXT,
         allowNull: false
     },
-    notify: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true
+    createdAt: {
+        field: 'created_at',
+        type: DataTypes.DATE
     },
-    left_time: {
-        type: DataTypes.DATE,
-        allowNull: true
+    updatedAt: {
+        field: 'updated_at',
+        type: DataTypes.DATE
     }
 }, {
-    tableName: 'task',
+    tableName: 'tasks',
     sequelize
 })
-// TaskModel.hasOne(UserModel, {
-//     foreignKey: 'author_id'
-// })
+
 
 export default TaskModel;
