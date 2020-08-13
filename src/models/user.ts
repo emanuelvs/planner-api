@@ -1,21 +1,24 @@
 import {Model, DataTypes} from "sequelize";
-import sequelize from './index';
+import sequelize from '../config/index';
 import bcrypt from 'bcrypt';
-import Task from './task';
+import taskModel from './task'
 
 export interface UserI{
-    id?: DataTypes.DataTypeAbstract
+    id?: DataTypes.DataTypeAbstract | string;
     name: string
     email: string
     password: string
+    createdAt: Date
+    updatedAt: Date
 }
 
 class UserModel extends Model<UserI> implements UserI{
-    public id?: DataTypes.DataTypeAbstract
+    public id?: DataTypes.DataTypeAbstract | string
     public name!: string;
     public email!: string;
     public password!: string;
     public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
 }
 UserModel.init(
     {
@@ -35,14 +38,22 @@ UserModel.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        createdAt: {
+            field: 'created_at',
+            type: DataTypes.DATE
+        },
+        updatedAt: {
+            field: 'updated_at',
+            type: DataTypes.DATE
         }
     },
     {
-        tableName: "user",
+        tableName: "users",
         sequelize
     }
 )
-
+UserModel.hasMany(taskModel);
 UserModel.beforeCreate((user, opts) => {
     return hashPassword(user.password)
         .then((hash: any) => {
@@ -66,12 +77,6 @@ function hashPassword(password: string) {
             })
         })
     })
-}
-
-export async function comparePass(user: UserModel, password: string, cb: any)
-{   
-    const u = user.get()
-    return await bcrypt.compare(password, u.password)
 }
 
 export default UserModel;

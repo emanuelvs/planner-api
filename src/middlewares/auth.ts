@@ -1,25 +1,25 @@
 import { Request, Response, NextFunction } from "express"
-import User from '../models/user'
-import { authenticate } from '../services/user';
+import userService from '../repositories/user';
 import jwt from 'jsonwebtoken'
-import config from '../config'
 
 export type auth = {
     isAuth: boolean, 
     token: string
 }
 
-export function auth(req: any, res: any, next: NextFunction) {
-    parseCredentials(req)
-    .then(async user => {
-        const auth = await authenticate(user)
-        req.auth = auth
-        next()
-    })
-    .catch(err => {
+export async function auth(req: any, res: any, next: NextFunction) {
+    if(req.user){
+        return res.status(200).json({authenticated: true})
+    }
+    try {
+        const user = await parseCredentials(req);
+        const token = await userService.authenticate(user);
+        req.raw_token = token;
+        return next()
+    } catch (error) {
         res.status(401);
-        next(err)
-    })
+        return next(error)
+    }
 }
 
 export function verifyJWT(req: any, res: any, next: any) {
@@ -32,7 +32,7 @@ export function verifyJWT(req: any, res: any, next: any) {
     
     jwt.verify(token, process.env.SECRET!, (err: any, payload: any) => {
         if(err) return next(err);
-        req.user = payload
+        req.user = payload.id;
         next()
     })
 }
